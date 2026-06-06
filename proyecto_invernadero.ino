@@ -61,6 +61,7 @@ void setup()
   Serial.begin(115200);
 
   dht.begin();
+  pinMode(LDR_PIN, INPUT);
 
   pinMode(FAN_RELAY, OUTPUT);
   pinMode(PUMP_RELAY, OUTPUT);
@@ -68,8 +69,8 @@ void setup()
   pinMode(LIGHT_LED, OUTPUT);
   pinMode(HEATER_LED, OUTPUT);
 
-  digitalWrite(FAN_RELAY, LOW);
-  digitalWrite(PUMP_RELAY, LOW);
+  digitalWrite(FAN_RELAY, HIGH);
+  digitalWrite(PUMP_RELAY, HIGH);
 
   digitalWrite(LIGHT_LED, LOW);
   digitalWrite(HEATER_LED, LOW);
@@ -116,7 +117,7 @@ void loop()
     int humedadSuelo = map(soilRaw, 4095, 2400, 0, 100);
 
     // Aproximación de lux
-    int lux = map(ldrRaw, 0, 4095, 0, 10000);
+    int lux = map(ldrRaw, 300, 3800, 0, 500);
 
     bool ventilador = false;
     bool bomba = false;
@@ -129,12 +130,12 @@ void loop()
 
     if (temperatura > 30)
     {
-      digitalWrite(FAN_RELAY, HIGH);
+      digitalWrite(FAN_RELAY, LOW);
       ventilador = true;
     }
     else
     {
-      digitalWrite(FAN_RELAY, LOW);
+      digitalWrite(FAN_RELAY, HIGH);
     }
 
     //=====================
@@ -143,12 +144,12 @@ void loop()
 
     if (humedadSuelo < 40)
     {
-      digitalWrite(PUMP_RELAY, HIGH);
+      digitalWrite(PUMP_RELAY, LOW);
       bomba = true;
     }
     else
     {
-      digitalWrite(PUMP_RELAY, LOW);
+      digitalWrite(PUMP_RELAY, HIGH);
     }
 
     //=====================
@@ -169,7 +170,7 @@ void loop()
     // Calefactor
     //=====================
 
-    if (temperatura < 15)
+    if (temperatura < 29)
     {
       digitalWrite(HEATER_LED, HIGH);
       calefactor = true;
